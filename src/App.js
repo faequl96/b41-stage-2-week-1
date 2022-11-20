@@ -34,7 +34,7 @@ function App() {
 
   useEffect(() => {
     setCartLength(myCart.length)
- }, [myCart])
+  }, [myCart])
 
   // setCartLength(myCart.length)
   

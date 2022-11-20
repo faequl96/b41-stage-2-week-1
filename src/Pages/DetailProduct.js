@@ -22,10 +22,17 @@ export const DetailProduct = () => {
    let [totalPrice, setTotalPrice] = useState(DataMenuList[id - 1].price);
    let [topingSelected, setTopingSelected] = useState([]);
 
+   let userLogin = JSON.parse(localStorage.getItem("userLogin"));
+   if(localStorage.getItem(`cartId${userLogin.id}`) == null) {
+		localStorage.setItem(`cartId${userLogin.id}`, 0);
+	}
+   let cartIdUserLogin = JSON.parse(localStorage.getItem(`cartId${userLogin.id}`));
+
    let [cartData, setCartData] = useState({
+      cartId: cartIdUserLogin,
       menuIndex: id - 1,
       menuName: DataMenuList[id - 1].menuName,
-      price: '',
+      price: totalPrice,
       topingSelected: topingSelected
    });
 
@@ -33,8 +40,15 @@ export const DetailProduct = () => {
       setCartData({ ...cartData, price: totalPrice })
    }, [totalPrice])
 
+   useEffect(() => {
+      setCartData({ ...cartData, topingSelected: topingSelected })
+   }, [topingSelected])
+   
+
    const addCartHandler = () => {
+      cartData.cartId = cartData.cartId + 1;
       let userLogin = JSON.parse(localStorage.getItem("userLogin"));
+      localStorage.setItem(`cartId${userLogin.id}`, cartData.cartId);
       let myCart = JSON.parse(localStorage.getItem(`myCart${userLogin.id}`));
 		myCart.push(cartData);
       contexts.cartContext.setCartLength(myCart.length);
@@ -48,7 +62,7 @@ export const DetailProduct = () => {
       setCheckToping7(false);
       setCheckToping8(false);
       setTotalPrice(DataMenuList[id - 1].price);
-      setTopingSelected([]);
+      setTopingSelected([])
    }
    
    return (
