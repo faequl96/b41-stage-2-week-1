@@ -11,41 +11,49 @@ export const DataTopingList = [
 	{
 		id : 1,
 		topingName: 'Bubble Tea Gelatin',
+		price: 3,
 		image: toping1,
 	},
 	{
 		id : 2,
 		topingName: 'Manggo',
+		price: 2,
 		image: toping2,
 	},
     {
 		id : 3,
 		topingName: 'Green Coconut',
+		price: 3,
 		image: toping3,
 	},
     {
 		id : 4,
 		topingName: 'Boba Manggo',
+		price: 2,
 		image: toping4,
 	},
     {
 		id : 5,
 		topingName: 'Bill Berry Boba',
+		price: 4,
 		image: toping5,
 	},
     {
 		id : 6,
 		topingName: 'Kiwi Popping Pearl',
+		price: 4,
 		image: toping6,
 	},
     {
 		id : 7,
 		topingName: 'Matcha Cantaloupe',
+		price: 3,
 		image: toping7,
 	},
     {
 		id : 8,
 		topingName: 'Strawberry Popping',
+		price: 2,
 		image: toping8,
 	},
 ];

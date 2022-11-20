@@ -1,11 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Form, Modal, Alert } from 'react-bootstrap';
-import { userData } from '../../data/userData';
-import { AppContext } from '../contexts/AppContext';
+// import { userData } from '../../data/userData';
+// import { AppContext } from '../contexts/AppContext';
 
 function Login({show, setShow, setShowRegister, setIsLogin, loginMessage, setLoginMessage}) {
 
   // const contexts = useContext(AppContext)
+  const userData = JSON.parse(localStorage.getItem("userData"))
 
   const [loginData, setLoginData] = useState({
     email: "",
@@ -14,21 +15,29 @@ function Login({show, setShow, setShowRegister, setIsLogin, loginMessage, setLog
 
   function loginHandler() {
     for(let i = 0; i <= userData.length; i++) {
-      if(userData[i].email == loginData.email) {
+      if(userData[i].email === loginData.email) {
         for(let i = 0; i <= userData.length; i++) {
-          if(userData[i].email == loginData.email && userData[i].password == loginData.password) {
-            localStorage.setItem("role", 'user');
+          if(userData[i].email === loginData.email && userData[i].password === loginData.password) {
             setIsLogin(true);
             setShow(false);
             setLoginMessage('');
             setLoginData({email: "", password: ""})
+            localStorage.setItem("userLogin", JSON.stringify(userData[i]));
+            localStorage.setItem("isLogin", true);
+            if(userData[i].role === 'user') {
+              if(localStorage.getItem(`myCart${userData[i].id}`) == null) {
+                localStorage.setItem(`myCart${userData[i].id}`, '[]');
+              }
+            } else {
+              localStorage.setItem(`myCart0`, '[]');
+            }
             i = userData.length;
-          } else if(i == userData.length-1) {
+          } else if(i === userData.length-1) {
             setLoginMessage('Password Salah!')
           }
         }
         return;
-      } else if(i == userData.length-1) {
+      } else if(i === userData.length-1) {
         setLoginMessage('Email belum terdaftar!')
       }
     }
@@ -39,7 +48,7 @@ function Login({show, setShow, setShowRegister, setIsLogin, loginMessage, setLog
       <Modal.Body>
         <Modal.Title className="mb-5 fw-bolder fs-1 text-danger">Login</Modal.Title>
         <Form>
-          {loginMessage != '' && (
+          {loginMessage !== '' && (
 						<Alert className='fs-6 fw-bolder text-center' variant={'danger'}>
 							{loginMessage}
 						</Alert>
