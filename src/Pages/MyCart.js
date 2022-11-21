@@ -22,6 +22,7 @@ export const MyCart = () => {
    }
 
    const [transactionDataForAdmin, setTransactionDataForAdmin] = useState({
+      userId: userLogin.id,
       name: "",
       email: "",
       phone: "",
@@ -49,13 +50,24 @@ export const MyCart = () => {
       } else if(days === 6) {
          day = "Saturday"
       }
+      let second = new Date().getSeconds();
+      if(second < 10) {second = `0${second}`}
+      let minute = new Date().getMinutes();
+      if(minute < 10) {minute = `0${minute}`}
+      let hour = new Date().getHours();
+      if(hour < 10) {hour = `0${hour}`}
       const date = new Date().getDate();
       const month = new Date().getMonth();
-      const year = new Date().getFullYear()
-      const transactionTime = `${date} ${month} ${year}`
+      const year = new Date().getFullYear();
+      const transactionTime = `${date} ${month} ${year} at ${hour}:${minute}:${second}`
       let userLogin = JSON.parse(localStorage.getItem("userLogin"));
       let myCart = JSON.parse(localStorage.getItem(`myCart${userLogin.id}`));
-      let addTransactionDataUser = {transactionTotalPrice: totalPrice, transactionDay: day, transactionTime, transactionCart: myCart}
+      for(let i = 0; i < myCart.length; i++) {
+         console.log(myCart[i].menuIndex);
+         myCart[i].transactionDay = day;
+         myCart[i].transactionTime = transactionTime;
+      }
+      let addTransactionDataUser = {transactionTotalPrice: totalPrice, transactionCart: myCart}
       let transactionDataUser = JSON.parse(localStorage.getItem(`transactionDataUser${userLogin.id}`));
       transactionDataUser.push(addTransactionDataUser);
       localStorage.setItem(`transactionDataUser${userLogin.id}`, JSON.stringify(transactionDataUser));
@@ -66,7 +78,7 @@ export const MyCart = () => {
       let transactionDataAdmin = JSON.parse(localStorage.getItem(`transactionDataAdmin`));
       transactionDataAdmin.push(transactionDataForAdmin);
       localStorage.setItem("transactionDataAdmin", JSON.stringify(transactionDataAdmin));
-      setTransactionDataForAdmin({name: "", email: "", phone: "", posCode: "", address: "", income: totalPrice, status: "Waiting Approve"})
+      setTransactionDataForAdmin({userId: userLogin.id, name: "", email: "", phone: "", posCode: "", address: "", income: totalPrice, status: "Waiting Approve"})
    }
    
    return (
