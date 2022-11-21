@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { Button, Form, Modal, Alert } from 'react-bootstrap';
-// import { userData } from '../../data/userData';
-// import { AppContext } from '../contexts/AppContext';
 
 function Login({show, setShow, setShowRegister, setIsLogin, loginMessage, setLoginMessage}) {
 
@@ -27,6 +25,9 @@ function Login({show, setShow, setShowRegister, setIsLogin, loginMessage, setLog
             if(userData[i].role === 'user') {
               if(localStorage.getItem(`myCart${userData[i].id}`) == null) {
                 localStorage.setItem(`myCart${userData[i].id}`, '[]');
+              }
+              if(localStorage.getItem(`transactionDataUser${userData[i].id}`) == null) {
+                localStorage.setItem(`transactionDataUser${userData[i].id}`, '[]');
               }
             } else {
               localStorage.setItem(`myCart0`, '[]');

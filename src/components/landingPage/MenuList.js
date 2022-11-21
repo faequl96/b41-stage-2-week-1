@@ -14,8 +14,8 @@ const MenuList = () => {
             {DataMenuList.map((item) => (
                 <div className='col-3 p-3'>
                     <Card 
-                        className='rounded-4 border-0 overflow-hidden shadow-sm' 
-                        style={{ width: '100%', backgroundColor : '#f6dada', cursor: 'pointer' }} 
+                        className='rounded-4 overflow-hidden' 
+                        style={{ width: '100%', backgroundColor : '#f4dcdc', cursor: 'pointer', borderColor: '#acacac' }} 
                         key={item.id} 
                         onClick={() => {
                             !contexts.loginContext.isLogin
@@ -25,8 +25,8 @@ const MenuList = () => {
                     >
                         <Card.Img variant="top" src={item.image} />
                         <Card.Body className='pb-0'>
-                            <h1 className='fs-6 text-danger fw-bolder'>{item.menuName}</h1>
-                            <p className='align-self-start text-danger'>Rp. {item.price}.000</p>
+                            <h1 className='text-danger fw-bolder' style={{ fontSize: '1.05rem' }}>{item.menuName}</h1>
+                            <p className='align-self-start fw-semibold' style={{color : "#984c4c"}}>Rp. {item.price}.000</p>
                         </Card.Body>
                     </Card>
                 </div>

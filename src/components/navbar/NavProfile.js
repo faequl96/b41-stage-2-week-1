@@ -46,7 +46,7 @@ const NavProfile = ({ setIsLogin, role }) => {
 						<Dropdown.Menu>
 							<Dropdown.Item className=' align-items-center border-bottom' style={{ height: '50px' }} >
 								<Link
-									to={role === 'user' ? '/profile' : '/partner/profile'}
+									to={role === 'user' ? '/myprofile' : '/partner/profile'}
 									className='text-dark text-decoration-none d-flex gap-2'
 								>
 									{role === 'user' ? (

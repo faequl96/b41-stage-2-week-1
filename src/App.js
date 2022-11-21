@@ -10,10 +10,14 @@ import { AppContext } from "./components/contexts/AppContext";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import { MyCart } from "./Pages/MyCart";
+import { MyProfile } from "./Pages/MyProfile";
 
 function App() {
   if(localStorage.getItem("userLogin") == null) {
 		localStorage.setItem('userLogin', JSON.stringify({id: 0}))
+	}
+  if(localStorage.getItem("transactionDataAdmin") == null) {
+		localStorage.setItem(`transactionDataAdmin`, '[]');
 	}
   localStorage.setItem(`myCart0`, '[]');
   
@@ -35,8 +39,6 @@ function App() {
   useEffect(() => {
     setCartLength(myCart.length)
   }, [myCart])
-
-  // setCartLength(myCart.length)
   
   const loginContext = {
     isLogin: isLogin,
@@ -85,6 +87,7 @@ function App() {
             <Route exact path='/' element={<LandingPage/>} ></Route>
             <Route exact path='/menu/:id/:menuName' element={<DetailProduct/>}></Route>
             <Route exact path='/mycart' element={<MyCart/>}></Route>
+            <Route exact path='/myprofile' element={<MyProfile/>}></Route>
           </Routes>
         </Router>
       </AppContext.Provider>

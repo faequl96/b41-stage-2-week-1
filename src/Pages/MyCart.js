@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Container, Image, Button, Form } from "react-bootstrap";
 import { DataMenuList } from '../data/DataMenuList';
 import { AppContext } from "../components/contexts/AppContext";
@@ -17,9 +17,56 @@ export const MyCart = () => {
    const reduceCartHandler = (cartIdSelected) => {
       const newMyCart = myCart.filter(cart => cart.cartId !== cartIdSelected);
       myCart = newMyCart;
-      console.log(myCart);
       contexts.cartContext.setCartLength(myCart.length);
 		localStorage.setItem(`myCart${userLogin.id}`, JSON.stringify(myCart));
+   }
+
+   const [transactionDataForAdmin, setTransactionDataForAdmin] = useState({
+      name: "",
+      email: "",
+      phone: "",
+      posCode: "",
+      address: "",
+      income: totalPrice,
+      status: "Waiting Approve"
+   });
+
+   const transactionHandler = () => {
+      const days = new Date().getDay();
+      let day = ""
+      if(days === 0) {
+         day = "Sunday"
+      } else if(days === 1) {
+         day = "Monday"
+      } else if(days === 2) {
+         day = "Tuesday"
+      } else if(days === 3) {
+         day = "Wednesday"
+      } else if(days === 4) {
+         day = "Thursday"
+      } else if(days === 5) {
+         day = "Friday"
+      } else if(days === 6) {
+         day = "Saturday"
+      }
+      const date = new Date().getDate();
+      const month = new Date().getMonth();
+      const year = new Date().getFullYear()
+      const transactionTime = `${date} ${month} ${year}`
+      let userLogin = JSON.parse(localStorage.getItem("userLogin"));
+      let myCart = JSON.parse(localStorage.getItem(`myCart${userLogin.id}`));
+      let addTransactionDataUser = {transactionTotalPrice: totalPrice, transactionDay: day, transactionTime, transactionCart: myCart}
+      let transactionDataUser = JSON.parse(localStorage.getItem(`transactionDataUser${userLogin.id}`));
+      transactionDataUser.push(addTransactionDataUser);
+      localStorage.setItem(`transactionDataUser${userLogin.id}`, JSON.stringify(transactionDataUser));
+      localStorage.setItem(`myCart${userLogin.id}`, '[]');
+      let myCartLength = JSON.parse(localStorage.getItem(`myCart${userLogin.id}`));
+      contexts.cartContext.setCartLength(myCartLength.length);
+
+      let transactionDataAdmin = JSON.parse(localStorage.getItem(`transactionDataAdmin`));
+      transactionDataAdmin.push(transactionDataForAdmin);
+      localStorage.setItem("transactionDataAdmin", JSON.stringify(transactionDataAdmin));
+      setTransactionDataForAdmin({name: "", email: "", phone: "", posCode: "", address: "", income: totalPrice, status: "Waiting Approve"})
    }
    
    return (
@@ -34,7 +81,7 @@ export const MyCart = () => {
             </div>
             <div className="border-bottom border-1 border-dark pt-2 pb-2">
                {myCart.map((cart) => (
-                  <div className="row mt-2 mb-4 deleteCartItem" value={cart.menuIndex}>
+                  <div className="row mt-2 mb-4">
                      <div className="col-2">
                         <div className="w-100">
                            <Image className="w-100" src={DataMenuList[cart.menuIndex].image}/>
@@ -55,7 +102,10 @@ export const MyCart = () => {
                      </div>
                      <div className="col-2 d-grid">
                         <p className="text-end fw-semibold text-danger">Rp. {cart.price}.000</p>
-                        <Image className="ms-auto" width="26" style={{ cursor: "pointer"}} src={trashIcon}
+                        <Image 
+                           className="ms-auto" 
+                           width="26" style={{ cursor: "pointer"}} 
+                           src={trashIcon}
                            onClick={() => reduceCartHandler(cart.cartId)}
                         />
                         <p className="opacity-0">space</p>
@@ -100,38 +150,54 @@ export const MyCart = () => {
             <Form style={{ marginTop: "100px" }}>
                <Form.Group className="mb-4">
                   <Form.Control
-                  style={{ paddingTop: "8px", paddingBottom: "8px" }}
-                  className='border border-3 border-danger fs-5'
-                  type="name"
-                  name="name"
-                  placeholder="Name"
+                     style={{ paddingTop: "8px", paddingBottom: "8px" }}
+                     className='border border-3 border-danger fs-5'
+                     type="text"
+                     name="name"
+                     placeholder="Name"
+                     value={transactionDataForAdmin.name}
+                     onChange={(e) =>
+                        setTransactionDataForAdmin({ ...transactionDataForAdmin, [e.target.name]: e.target.value })
+                     }
                   />
                </Form.Group>
                <Form.Group className="mb-4">
                   <Form.Control
-                  style={{ paddingTop: "8px", paddingBottom: "8px" }}
-                  className='border border-3 border-danger fs-5'
-                  type="email"
-                  name="email"
-                  placeholder="Email"
+                     style={{ paddingTop: "8px", paddingBottom: "8px" }}
+                     className='border border-3 border-danger fs-5'
+                     type="email"
+                     name="email"
+                     placeholder="Email"
+                     value={transactionDataForAdmin.email}
+                     onChange={(e) =>
+                        setTransactionDataForAdmin({ ...transactionDataForAdmin, [e.target.name]: e.target.value })
+                     }
                   />
                </Form.Group>
                <Form.Group className="mb-4">
                   <Form.Control
-                  style={{ paddingTop: "8px", paddingBottom: "8px" }}
-                  className='border border-3 border-danger fs-5'
-                  type="text"
-                  name="phone"
-                  placeholder="Phone"
+                     style={{ paddingTop: "8px", paddingBottom: "8px" }}
+                     className='border border-3 border-danger fs-5'
+                     type="text"
+                     name="phone"
+                     placeholder="Phone"
+                     value={transactionDataForAdmin.phone}
+                     onChange={(e) =>
+                        setTransactionDataForAdmin({ ...transactionDataForAdmin, [e.target.name]: e.target.value })
+                     }
                   />
                </Form.Group>
                <Form.Group className="mb-4">
                   <Form.Control
-                  style={{ paddingTop: "8px", paddingBottom: "8px" }}
-                  className='border border-3 border-danger fs-5'
-                  type="text"
-                  name="poscode"
-                  placeholder="Pos Code"
+                     style={{ paddingTop: "8px", paddingBottom: "8px" }}
+                     className='border border-3 border-danger fs-5'
+                     type="text"
+                     name="posCode"
+                     placeholder="Pos Code"
+                     value={transactionDataForAdmin.posCode}
+                     onChange={(e) =>
+                        setTransactionDataForAdmin({ ...transactionDataForAdmin, [e.target.name]: e.target.value })
+                     }
                   />
                </Form.Group>
                <Form.Group className="mb-5">
@@ -139,11 +205,20 @@ export const MyCart = () => {
                      style={{ paddingTop: "8px", paddingBottom: "8px" }}
                      rows={3} 
                      className='border border-3 border-danger fs-5'
+                     name="address"
                      placeholder="Address"
+                     value={transactionDataForAdmin.address}
+                     onChange={(e) =>
+                        setTransactionDataForAdmin({ ...transactionDataForAdmin, [e.target.name]: e.target.value })
+                     }
                   />
                </Form.Group>
                <Form.Group className="mb-4">
-                  <Button variant='danger fw-semibold' className="w-100 fs-5" style={{ paddingTop: "5px", paddingBottom: "7px" }}>Pay</Button>
+                  <Button variant='danger fw-semibold' className="w-100 fs-5" style={{ paddingTop: "5px", paddingBottom: "7px" }}
+                     onClick={transactionHandler}
+                  >
+                     Pay
+                  </Button>
                </Form.Group>
             </Form>
          </div>
